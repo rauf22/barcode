@@ -6,10 +6,10 @@ export function getSums(arr) {
   return result;
 }
 
-export function controlSum(ostatok) {
-  let itog = 0
-  if (ostatok == 0) {
-    return itog
+export function controlSum(ostatok, code) {
+
+  if (ostatok == 0 && code) {
+    return 0;
   } else {
     return (10 - ostatok)
   }

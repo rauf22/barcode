@@ -3,8 +3,8 @@
 
     <div>
       <label for="code">Code</label>
-      <input type="text" v-model="code" maxlength="19" placeholder="Enter code">
-      <button @click="oninput">press me</button>
+      <input type="text" v-model="code" maxlength="19" @keyup="oninput" placeholder="Enter code">
+      <!-- <button @click="oninput">press me</button> -->
       <div class="code">
         {{code}}
       </div>
@@ -18,9 +18,9 @@
         v-for="bar in code"
         :key="bar"
         :class="`bar${bar}`"
-      >{{bar}}
+      ><span class="barChild">{{bar}}</span> 
       </div>
-      <p class="final">final</p>  
+      <span class="final">{{final}}</span>
     </div>
 
   </div>
@@ -38,6 +38,7 @@ export default {
   data() {
     return {
       code: [],
+      final: '',
     }
   },
   computed: {
@@ -62,7 +63,7 @@ export default {
       })
 
       let ostatok = ((getSums(chet) * 3 + getSums(nech))%10)
-      let final = controlSum(ostatok)
+     this.final = controlSum(ostatok,this.code)
 
       console.log(nech)
       console.log(chet)
@@ -71,7 +72,7 @@ export default {
 
       console.log(typeof(chet))
       console.log(getSums(chet))
-      console.log(final)
+      // console.log(final)
 
       
     },
@@ -102,84 +103,97 @@ export default {
 }
 .barcode {
   display: flex;
-  flex-wrap: wrap;
+  /* flex-wrap: wrap; */
   justify-content: center;
   margin-top: 100px;
+  
 }
 .bar0 {
   height: 30px;
   width: 15px;
-  margin-right: 1px;
+  margin: 28px 1px 10px;
+  padding-top: 6px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar1 {
   height: 60px;
   width: 15px;
-  margin-right: 1px;
+  margin: 1px 1px 40px;
+  padding-top: 33px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar2 {
   height: 90px;
   width: 15px;
-  margin-right: 1px;
+  margin: -30px 1px -45px;
+  padding-top: 65px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar3 {
   height: 120px;
   width: 15px;
-  margin-right: 1px;
+  margin: -60px 1px -60px;
+  padding-top: 95px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar4 {
   height: 30px;
   width: 30px;
-  margin-right: 1px;
+  margin: 28px 1px 10px;
+  padding-top: 6px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar5 {
   height: 60px;
   width: 30px;
-  margin-right: 1px;
+  margin: 1px 1px 40px;
+  padding-top: 32px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar6 {
   height: 90px;
   width: 30px;
-  margin-right: 1px;
+  margin: -30px 1px -45px;
+  padding-top: 65px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar7 {
   height: 120px;
   width: 30px;
-  margin-right: 1px;
+  margin: -60px 1px -60px;
+  padding-top: 95px;
   border: solid 1px blue;
   background-color: aqua;
 }
+
 .bar8 {
   height: 30px;
   width: 45px;
-  margin-right: 1px;
+  margin: 28px 1px 10px;
+  padding-top: 6px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .bar9 {
   height: 60px;
   width: 45px;
-  margin-right: 1px;
+  margin: 1px 1px 40px;
+  padding-top: 32px;
   border: solid 1px blue;
   background-color: aqua;
 }
 .final {
   height: 120px;
   width: 30px;
-  margin-right: 1px;
+  margin: -60px 1px -60px;
+  padding-top: 95px;
   border: solid 1px blue;
   background-color: white;
 }
