@@ -3,7 +3,11 @@
 
     <div>
       <label for="code">Code</label>
-      <input type="text" v-model="code" maxlength="19" @keyup="oninput" placeholder="Enter code">
+      <input type="text"
+      v-model="code"
+      maxlength="19"
+      @keyup="oninput"
+      placeholder="Enter code">
       <!-- <button @click="oninput">press me</button> -->
       <div class="code">
         {{code}}
@@ -20,7 +24,7 @@
         :class="`bar${bar}`"
       ><span class="barChild">{{bar}}</span> 
       </div>
-      <span class="final">{{final}}</span>
+      <span v-if="show" class="final">{{final}}</span>
     </div>
 
   </div>
@@ -39,6 +43,7 @@ export default {
     return {
       code: [],
       final: '',
+      show: false,
     }
   },
   computed: {
@@ -50,6 +55,7 @@ export default {
 
   methods: {
     oninput() {
+      this.show = true
       let cod = Array.from(this.code)
 
       let nech=cod.map(c => parseInt(c))
