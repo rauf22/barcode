@@ -1,207 +1,187 @@
 <template>
-  <div id="app">
-
-    <div>
-      <label for="code">Code</label>
-      <input type="text"
-      v-model="code"
-      maxlength="19"
-      @keyup="oninput"
-      placeholder="Enter code">
-      <!-- <button @click="oninput">press me</button> -->
+  <div
+    id="app"
+    class="App"
+  >
+    <div class="editor">
       <div class="code">
-        {{code}}
+        <label for="code"> Code </label>
+        <input
+          id="code"
+          v-model.trim="code"
+          placeholder="Enter up to 19 digits"
+          type="text"
+          maxlength="19"
+          class="value"
+          @keypress="rejectNonDigits"
+          @paste.prevent="validateOnPaste"
+        >
       </div>
-      <div class="codelen">
-        {{code ? code.length : ""}}
+
+      <div class="checksum">
+        <label> CS </label>
+        <div
+          class="value"
+          v-text="checksum"
+        />
+      </div>
+
+      <div class="colors">
+        <label for="primary">
+          <input
+            id="primary"
+            v-model="colorPrimary"
+            type="color"
+          > Primary
+        </label>
+
+        <label for="secondary">
+          <input
+            id="secondary"
+            v-model="colorSecondary"
+            type="color"
+          > Secondary
+        </label>
       </div>
     </div>
 
-    <div class="barcode">
-      <div 
-        v-for="bar in code"
-        :key="bar"
-        :class="`bar${bar}`"
-      ><span class="barChild">{{bar}}</span> 
-      </div>
-      <span v-if="show" class="final">{{final}}</span>
-    </div>
+    <Barcode
+      :digits="digitsArray"
+      :checksum="checksum"
+      :style="{
+        '--color-primary': colorPrimary,
+        '--color-secondary': colorSecondary
+      }"
+    />
 
+    <!--a
+      href="https://github.com/vilinicz/barcode_editor"
+      class="link-to-github"
+    >
+      Source on Github
+    </a-->
   </div>
 </template>
 
 <script>
-import {getSums, controlSum} from './func'
+import Barcode from './components/Barcode.vue';
 
 export default {
-
   name: 'App',
-  components: {
-    
-  },
+  components: { Barcode },
+
   data() {
     return {
-      code: [],
-      final: '',
-      show: false,
-    }
+      code: '0123456789',
+
+      // Primary and Secondary colors for Barcode component
+      colorPrimary: '#409EFF',
+      colorSecondary: '#E6A23C',
+    };
   },
+
   computed: {
-    barClass (b) {
-      let i = `bar${b}`
-      return {i}
-    }
+    // Convert code string to array of digits
+    digitsArray() {
+      return Array.from(String(this.code.replace(/\s/g, '')), Number);
+    },
+
+    // Calculate checksum
+    checksum() {
+      if (!this.code) return null;
+
+      const evenSum = this.digitsArray
+        .filter((v, i) => i % 2 !== 0)
+        .reduce((a, b) => a + b, 0);
+      const oddSum = this.digitsArray
+        .filter((v, i) => i % 2 === 0)
+        .reduce((a, b) => a + b, 0);
+
+      const remainder = (evenSum + oddSum * 3) % 10;
+      return remainder === 0 ? 0 : 10 - remainder;
+    },
   },
 
   methods: {
-    oninput() {
-      this.show = true
-      let cod = Array.from(this.code)
-
-      let nech=cod.map(c => parseInt(c))
-      .filter(function(v,i){
-        if(i % 2 != 0) return v;
-      })
-
-      let chet=cod.map(c => parseInt(c))
-      .filter(function(v,i){
-        if(i % 2 == 0) return v;
-      })
-
-      let ostatok = ((getSums(chet) * 3 + getSums(nech))%10)
-     this.final = controlSum(ostatok,this.code)
-
-      console.log(nech)
-      console.log(chet)
-      console.log(typeof(nech))
-      console.log(getSums(nech))
-
-      console.log(typeof(chet))
-      console.log(getSums(chet))
-      // console.log(final)
-
-      
+    // Check if pressed key is digit
+    rejectNonDigits(e) {
+      if (!e.key.match(/\d/)) {
+        e.preventDefault();
+      }
     },
-    
-  }
-}
+
+    // Prevent and validate text on paste event
+    validateOnPaste(e) {
+      const copied = e.clipboardData.getData('text');
+      if (copied.match(/\d/)) {
+        this.code = copied;
+      }
+    },
+  },
+};
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-.code {
-  margin-top: 20px;
-}
-.codelen {
-  margin-top: 20px;
-}
-.bar_exist {
-  background: #aeaeae;
-  cursor: pointer;
-  color: #fff;
-}
-.barcode {
-  display: flex;
-  /* flex-wrap: wrap; */
-  justify-content: center;
-  margin-top: 100px;
-  
-}
-.bar0 {
-  height: 30px;
-  width: 15px;
-  margin: 28px 1px 10px;
-  padding-top: 6px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar1 {
-  height: 60px;
-  width: 15px;
-  margin: 1px 1px 40px;
-  padding-top: 33px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar2 {
-  height: 90px;
-  width: 15px;
-  margin: -30px 1px -45px;
-  padding-top: 65px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar3 {
-  height: 120px;
-  width: 15px;
-  margin: -60px 1px -60px;
-  padding-top: 95px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar4 {
-  height: 30px;
-  width: 30px;
-  margin: 28px 1px 10px;
-  padding-top: 6px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar5 {
-  height: 60px;
-  width: 30px;
-  margin: 1px 1px 40px;
-  padding-top: 32px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar6 {
-  height: 90px;
-  width: 30px;
-  margin: -30px 1px -45px;
-  padding-top: 65px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar7 {
-  height: 120px;
-  width: 30px;
-  margin: -60px 1px -60px;
-  padding-top: 95px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
+<style lang="scss">
+.App {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
 
-.bar8 {
-  height: 30px;
-  width: 45px;
-  margin: 28px 1px 10px;
-  padding-top: 6px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.bar9 {
-  height: 60px;
-  width: 45px;
-  margin: 1px 1px 40px;
-  padding-top: 32px;
-  border: solid 1px blue;
-  background-color: aqua;
-}
-.final {
-  height: 120px;
-  width: 30px;
-  margin: -60px 1px -60px;
-  padding-top: 95px;
-  border: solid 1px blue;
-  background-color: white;
-}
+  .link-to-github {
+    position: fixed;
+    z-index: 1;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    background-color: rgba(#fff, 0.9);
+    color: var(--blue);
+    bottom: 1rem;
+    right: 1rem;
+    box-shadow: 1px 1px 2px rgba(#000, 0.075);
+  }
 
+  .editor {
+    display: flex;
+    justify-content: space-between;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--gray-lightest);
+
+    .code,
+    .checksum,
+    .colors {
+      padding: 1rem;
+    }
+
+    .code {
+      flex: 1 0 auto;
+    }
+
+    .checksum,
+    .colors {
+      border-left: 1px solid var(--gray-extra-ligth);
+    }
+
+    .checksum {
+      text-align: center;
+    }
+
+    .colors {
+      flex: 0 0 auto;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: space-between;
+    }
+
+    .value {
+      font-size: 1.5rem;
+      letter-spacing: 2px;
+      width: 100%;
+    }
+
+    @media (min-width: 800px) {
+      .value {
+        font-size: 2rem;
+      }
+    }
+  }
+}
 </style>

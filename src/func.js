@@ -1,17 +1,11 @@
 export function getSums(arr) {
-  var result = arr.reduce(function(sum, current) {
-    return sum + current
-  });
-
+  const result = arr.reduce((sum, current) => sum + current);
   return result;
 }
 
 export function controlSum(ostatok, code) {
-
-  if (ostatok == 0 && code) {
+  if (ostatok === 0 && code) {
     return 0;
-  } else {
-    return (10 - ostatok)
   }
+  return (10 - ostatok);
 }
-
