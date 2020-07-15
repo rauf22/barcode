@@ -8,7 +8,7 @@
         <label for="code"> Code </label>
         <input
           id="code"
-          v-model.trim="code"
+          v-model="code"
           placeholder="Enter up to 19 digits"
           type="text"
           maxlength="19"

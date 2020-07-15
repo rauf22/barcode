@@ -1,0 +1,15 @@
+TN:
+SF:src/components/Foo.vue
+FN:12,data
+FN:19,changeMessage
+FNF:2
+FNH:1
+FNDA:1,data
+FNDA:0,changeMessage
+DA:13,1
+DA:20,0
+LF:2
+LH:1
+BRF:0
+BRH:0
+end_of_record

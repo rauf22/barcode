@@ -1,26 +1,15 @@
 <template>
   <div class="Barcode">
     <template v-if="digits.length">
-      <div
-        v-for="(d, i) in digits"
-        :key="`${d}_${i}`"
-        class="bar"
-        :style="barStyle(d)"
-      >
+      <div v-for="(d, i) in digits" :key="`${d}_${i}`" class="bar" :style="barStyle(d)">
         <span class="value">{{ d }}</span>
       </div>
-      <div
-        class="bar checksum"
-        :style="barStyle(checksum)"
-      >
+      <div class="bar checksum" :style="barStyle(checksum)">
         <span class="value">{{ checksum }}</span>
       </div>
     </template>
 
-    <div
-      v-else
-      class="hint"
-    >
+    <div v-else class="hint">
       No data for Barcode
     </div>
   </div>
@@ -31,12 +20,12 @@ export default {
   props: {
     digits: {
       type: Array,
-      default: () => [],
+      default: () => []
     },
     checksum: {
       type: Number,
-      default: null,
-    },
+      default: null
+    }
   },
 
   methods: {
@@ -64,10 +53,10 @@ export default {
 
       return {
         height: `${height * 5}%`,
-        width: `${width}%`,
+        width: `${width}%`
       };
-    },
-  },
+    }
+  }
 };
 </script>
 
